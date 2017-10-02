@@ -10,7 +10,7 @@ import com.security.oauth.entities.User;
 import com.security.oauth.repositories.UserRepository;
 
 @Service
-public class UserService {
+public class UserServiceDAO {
 
     @Autowired
     private UserRepository repo;
@@ -23,6 +23,11 @@ public class UserService {
     public void save(User user){
         user.setPassword(getPasswordEncoder().encode(user.getPassword()));
         repo.save(user);
+    }
+    
+    public void clear(){
+        
+        repo.deleteAll();
     }
 
 }
