@@ -1,5 +1,7 @@
 package com.security.oauth.config;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +12,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
 
 @Configuration
@@ -22,8 +24,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     
     @Bean
 	public TokenStore tokenStore() {
-		return new InMemoryTokenStore();
+		return new JdbcTokenStore(dataSource);
 	}
+    
+    @Autowired
+    private DataSource dataSource;
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
@@ -35,15 +40,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
   
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory().withClient("registeredclient") // client name
-                .authorizedGrantTypes("client_credentials", "password","refresh_token").scopes("read","write","trust")
-                .resourceIds("oauth2-resource").accessTokenValiditySeconds(600).refreshTokenValiditySeconds(1800).secret("clientsecret");
+    	
+    	clients.jdbc(dataSource);
     }
 
    
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        security.checkTokenAccess("isAuthenticated()");
+        security.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
     }
 
 

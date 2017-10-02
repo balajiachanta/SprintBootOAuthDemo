@@ -1,11 +1,16 @@
 package com.security.oauth.controllers;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +24,9 @@ public class SecureService {
 
 	@Autowired
 	private UserRepository repository;
+	
+	@Autowired
+	ConsumerTokenServices tokenServices;
 
 	@GetMapping(value="/getUserDetails")
 	public ResourceResponse retrieveUserInfo(){
@@ -44,6 +52,18 @@ public class SecureService {
 			OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenValue);
 			tokenStore.removeAccessToken(accessToken);
 		}
+	}
+	
+	@GetMapping(value="/tokens")
+	public List<String> getTokens() {
+	    List<String> tokenValues = new ArrayList<String>();
+	    Collection<OAuth2AccessToken> tokens = tokenStore.findTokensByClientId("registeredclient"); 
+	    if (tokens!=null){
+	        for (OAuth2AccessToken token:tokens){
+	            tokenValues.add(token.getValue());
+	        }
+	    }
+	    return tokenValues;
 	}
 
 }
