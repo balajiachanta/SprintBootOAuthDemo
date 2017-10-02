@@ -1,2 +1,2 @@
 delete from user
-insert into user (email, firstname, lastname, password, username) values ('abcdefghi@gmail.com','apple','iphone','password','abcdefghi@gmail.com')
+insert into user (email, firstname, lastname, password, username) values ('abcdefghi@gmail.com','apple','iphone','77+9Qu+/vUbvv70oJmZEO2JG77+9UO+/vXXvv71iae+/ve+/vSLui77vv73vv73vv70hMnk=','abcdefghi@gmail.com')
