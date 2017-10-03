@@ -8,17 +8,28 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.security.oauth.config.CustomUserDetails;
+import com.security.oauth.controllers.SecureService;
+import com.security.oauth.entities.EncodeDetails;
+
 
 public class CustomPasswordEncoder implements PasswordEncoder{
 	
-	int max = 10000;
-	int min = 1;
 	
-	Random rand = new Random(); 
+	private SecureService secureService;
+
 	
-	int value = rand.nextInt((max - min) + 1) + min;
-	int length = rand.nextInt((max - min) + 1) + min;
+//	int max = 10000;
+//	int min = 1;
+//	
+//	Random rand = new Random(); 
+//	
+//	int value = rand.nextInt((max - min) + 1) + min;
+//	int length = rand.nextInt((max - min) + 1) + min;
 	
 	byte[] randomSalt = getSaltByte();
 
@@ -30,6 +41,12 @@ public class CustomPasswordEncoder implements PasswordEncoder{
 
 	@Override
 	public boolean matches(CharSequence rawPassword, String encodedPassword) {
+		
+		SecureService secureService = new SecureService();
+		EncodeDetails encodeDetails = secureService.getEncodeDetails("abcdefgh@gmail.com");
+		
+		System.out.println("************ " +encodeDetails.getName());
+		
 		String rawPasswordEncoded = hashPassword(rawPassword.toString().toCharArray(), "salt".getBytes(), 100, 256);
 		return equals(rawPasswordEncoded.getBytes(), encodedPassword.getBytes());
 	}

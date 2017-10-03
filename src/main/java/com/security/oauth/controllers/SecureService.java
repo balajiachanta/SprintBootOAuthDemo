@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.security.oauth.ResourceResponse;
+import com.security.oauth.entities.EncodeDetails;
 import com.security.oauth.entities.User;
+import com.security.oauth.repositories.EncodeRepository;
 import com.security.oauth.repositories.UserRepository;
 
 @RestController
@@ -24,6 +26,9 @@ public class SecureService {
 
 	@Autowired
 	private UserRepository repository;
+	
+	@Autowired
+	private EncodeRepository encodeRepository;
 	
 	@Autowired
 	ConsumerTokenServices tokenServices;
@@ -64,6 +69,11 @@ public class SecureService {
 	        }
 	    }
 	    return tokenValues;
+	}
+	
+	
+	public EncodeDetails getEncodeDetails(String name) {
+		return encodeRepository.findByUserName(name);
 	}
 
 }

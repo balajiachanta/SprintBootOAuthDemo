@@ -1,5 +1,9 @@
 delete from user;
 insert into user (email, firstname, lastname, password, username) values ('abcdefgh@gmail.com','apple','iphone','�B�F�(&fD;bF�P�u�bi��"���!2y','abcdefgh@gmail.com');
+
+delete from ENCODE_DETAILS;
+INSERT INTO ENCODE_DETAILS(ITERATIONS,KEY_LENGTH,NAME,USER_NAME)VALUES(100,256,'salt','abcdefgh@gmail.com');
+
 drop table if exists oauth_client_details;
 create table oauth_client_details (
   client_id VARCHAR(255) PRIMARY KEY,
