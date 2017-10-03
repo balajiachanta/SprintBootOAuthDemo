@@ -8,20 +8,13 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.security.oauth.config.CustomUserDetails;
-import com.security.oauth.controllers.SecureService;
-import com.security.oauth.entities.EncodeDetails;
-
-
+@Service
 public class CustomPasswordEncoder implements PasswordEncoder{
 	
 	
-	private SecureService secureService;
-
 	
 //	int max = 10000;
 //	int min = 1;
@@ -41,13 +34,14 @@ public class CustomPasswordEncoder implements PasswordEncoder{
 
 	@Override
 	public boolean matches(CharSequence rawPassword, String encodedPassword) {
-		
-		SecureService secureService = new SecureService();
-		EncodeDetails encodeDetails = secureService.getEncodeDetails("abcdefgh@gmail.com");
-		
-		System.out.println("************ " +encodeDetails.getName());
-		
+	
 		String rawPasswordEncoded = hashPassword(rawPassword.toString().toCharArray(), "salt".getBytes(), 100, 256);
+		return equals(rawPasswordEncoded.getBytes(), encodedPassword.getBytes());
+	}
+	
+	public boolean pwdMatches(CharSequence rawPassword, String encodedPassword,String salt,int iterations, int keyLength ) {
+		
+		String rawPasswordEncoded = hashPassword(rawPassword.toString().toCharArray(), salt.getBytes(), iterations, keyLength);
 		return equals(rawPasswordEncoded.getBytes(), encodedPassword.getBytes());
 	}
 	
