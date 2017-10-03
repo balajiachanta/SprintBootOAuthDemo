@@ -1,4 +1,5 @@
 package com.security.oauth.util;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Random;
@@ -7,11 +8,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
-@Service
 public class CustomPasswordEncoder implements PasswordEncoder{
 	
 	int max = 10000;
@@ -26,7 +24,6 @@ public class CustomPasswordEncoder implements PasswordEncoder{
 
 	@Override
 	public String encode(CharSequence rawPassword) {
-		System.out.println("@@@@ " + rawPassword.toString() + " @@@" + hashPassword(rawPassword.toString().toCharArray(), "salt".getBytes(), 100, 256));
 		return hashPassword(rawPassword.toString().toCharArray(), "salt".getBytes(), 100, 256);
 	}
 
@@ -34,12 +31,7 @@ public class CustomPasswordEncoder implements PasswordEncoder{
 	@Override
 	public boolean matches(CharSequence rawPassword, String encodedPassword) {
 		String rawPasswordEncoded = hashPassword(rawPassword.toString().toCharArray(), "salt".getBytes(), 100, 256);
-		
-		
-		String enteredPwd = Base64.encodeBase64String(rawPasswordEncoded.getBytes());
-		boolean match = enteredPwd.equals(encodedPassword);
-		return match;
-
+		return equals(rawPasswordEncoded.getBytes(), encodedPassword.getBytes());
 	}
 	
 	public static boolean equals(byte[] b1, byte[] b2)
