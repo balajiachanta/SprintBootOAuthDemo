@@ -1,13 +1,8 @@
 package com.security.oauth.entities;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 @Entity
 public class User {
@@ -18,13 +13,11 @@ public class User {
     
     private String firstname;
     private String lastname;
-    
     private String email;
     private String username;
-    private String password;
-    
-    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-    private List<Role> roles;
+	private String company;
+    private String country;
+   
     
 	public Long getId() {
 		return id;
@@ -50,27 +43,19 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getPassword() {
-		return password;
+    public String getCompany() {
+		return company;
 	}
-	public void setPassword(String password) {
-		this.password = password;
+	public void setCompany(String company) {
+		this.company = company;
 	}
-	public User(String firstname, String lastname, String email,String username, String password,List<Role> roles) {
-		super();
-		this.firstname = firstname;
-		this.lastname = lastname;
-		this.email = email;
-		this.username=username;
-		this.password = password;
-		this.roles = roles;
+	public String getCountry() {
+		return country;
 	}
-	public List<Role> getRoles() {
-		return roles;
+	public void setCountry(String country) {
+		this.country = country;
 	}
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
-	}
+	
 	public String getUsername() {
 		return username;
 	}
@@ -78,10 +63,17 @@ public class User {
 		this.username = username;
 	}
 	
-	public User(){};
-    
-    
-    
-    
-   
+	User(){}
+	
+	public User(String firstname, String lastname, String email,String username, String company, String country) {
+		super();
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.email = email;
+		this.username=username;
+		this.company = company;
+		this.country = country;
+	}
+	
+
 }

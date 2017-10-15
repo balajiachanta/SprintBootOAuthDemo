@@ -1,48 +1,23 @@
 package com.security.oauth.util;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Random;
 
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CustomPasswordEncoder implements PasswordEncoder{
+public class CustomPasswordEncoder {
 	
 	
-	
-//	int max = 10000;
-//	int min = 1;
-//	
-//	Random rand = new Random(); 
-//	
-//	int value = rand.nextInt((max - min) + 1) + min;
-//	int length = rand.nextInt((max - min) + 1) + min;
-	
-	byte[] randomSalt = getSaltByte();
-
-	@Override
-	public String encode(CharSequence rawPassword) {
-		return hashPassword(rawPassword.toString().toCharArray(), "salt".getBytes(), 100, 256);
-	}
-
-
-	@Override
-	public boolean matches(CharSequence rawPassword, String encodedPassword) {
-	
-		String rawPasswordEncoded = hashPassword(rawPassword.toString().toCharArray(), "salt".getBytes(), 100, 256);
-		return equals(rawPasswordEncoded.getBytes(), encodedPassword.getBytes());
-	}
-	
-	public boolean pwdMatches(CharSequence rawPassword, String encodedPassword,String salt,int iterations, int keyLength ) {
+	public boolean pwdMatches(CharSequence rawPassword, byte[] encodedPassword,byte[] salt,int iterations, int keyLength) {
 		
-		String rawPasswordEncoded = hashPassword(rawPassword.toString().toCharArray(), salt.getBytes(), iterations, keyLength);
-		return equals(rawPasswordEncoded.getBytes(), encodedPassword.getBytes());
+		byte[] rawPasswordEncoded = hashPassword(rawPassword.toString().toCharArray(), salt, iterations, keyLength);
+		return equals(rawPasswordEncoded, encodedPassword);
 	}
 	
 	public static boolean equals(byte[] b1, byte[] b2)
@@ -54,33 +29,30 @@ public class CustomPasswordEncoder implements PasswordEncoder{
 		        return diff == 0; 
 	}
 	
-	public static String hashPassword( final char[] password, final byte[] salt, final int iterations, final int keyLength ) {
+	public static byte[] hashPassword( final char[] password, final byte[] salt, final int iterations, final int keyLength ) {
 		 
 	       try {
 	           SecretKeyFactory skf = SecretKeyFactory.getInstance( "PBKDF2WithHmacSHA512" );
 	           PBEKeySpec spec = new PBEKeySpec( password, salt, iterations, keyLength );
 	           SecretKey key = skf.generateSecret( spec );
 	           byte[] res = key.getEncoded( );
-	           return new String(res);
+	           return res;
 	 
 	       } catch( NoSuchAlgorithmException | InvalidKeySpecException e ) {
 	           throw new RuntimeException( e );
 	       }
 	   }
 	
-	public static byte[] getSaltByte()
+	public static byte[] getSaltByte() throws NoSuchAlgorithmException
 	{
 		
-	        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-	        StringBuilder salt = new StringBuilder();
-	        Random rnd = new Random();
-	        while (salt.length() < 18) { // length of the random string.
-	            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-	            salt.append(SALTCHARS.charAt(index));
-	        }
-	        String saltStr = salt.toString();
-	        System.out.println("random salt " +saltStr);
-	        return saltStr.getBytes();
+		SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+        byte[] salt = new byte[32];                       
+        sr.nextBytes(salt);
+        for(int i = 0; i<32; i++) {
+            System.out.print(salt[i]);
+        }
+        return salt;
 	    
 	}
 

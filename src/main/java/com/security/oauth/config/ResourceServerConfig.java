@@ -16,12 +16,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.headers().frameOptions().disable().and()
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
+                .antMatchers("/registration/**").permitAll()
                 .antMatchers("/getUserDetails/**").authenticated()
                 .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler())
-                .and().logout().logoutUrl("/oauth/logout");
-                
-        
+                .and().logout().logoutUrl("/oauth/logout");   
     }
 
    

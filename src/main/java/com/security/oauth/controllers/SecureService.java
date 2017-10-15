@@ -1,8 +1,7 @@
 package com.security.oauth.controllers;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+
+import java.security.NoSuchAlgorithmException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,11 +12,13 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.security.oauth.ResourceResponse;
+import com.security.oauth.config.UserPasswordConverter;
 import com.security.oauth.entities.User;
-import com.security.oauth.repositories.EncodeRepository;
+import com.security.oauth.pojo.Customer;
 import com.security.oauth.repositories.UserRepository;
 
 @RestController
@@ -25,12 +26,13 @@ public class SecureService {
 
 	@Autowired
 	private UserRepository repository;
-	
+
+
 	@Autowired
-	private EncodeRepository encodeRepository;
-	
+	private ConsumerTokenServices tokenServices;
+
 	@Autowired
-	ConsumerTokenServices tokenServices;
+	private UserPasswordConverter userPasswordConverter;
 
 	@GetMapping(value="/getUserDetails")
 	public ResourceResponse retrieveUserInfo(){
@@ -57,17 +59,27 @@ public class SecureService {
 			tokenStore.removeAccessToken(accessToken);
 		}
 	}
-	
-	@GetMapping(value="/tokens")
-	public List<String> getTokens() {
-	    List<String> tokenValues = new ArrayList<String>();
-	    Collection<OAuth2AccessToken> tokens = tokenStore.findTokensByClientId("registeredclient"); 
-	    if (tokens!=null){
-	        for (OAuth2AccessToken token:tokens){
-	            tokenValues.add(token.getValue());
-	        }
-	    }
-	    return tokenValues;
+
+
+	@PostMapping(value = "/registration")
+	public void createNewUser(@RequestBody Customer newCustomer) throws NoSuchAlgorithmException {
+		User user = null;
+		User userExists = repository.findByUsername(newCustomer.getEMail());
+		if (userExists != null) {
+
+		}
+		else {
+
+			boolean record = userPasswordConverter.passwordEncryptor(newCustomer.getPassword(), newCustomer.getEMail());
+			// record =  UserPasswordConverter.
+			if (record == true) {
+				user = new User(newCustomer.getFirstName(), newCustomer.getLastName(), newCustomer.getEMail(), newCustomer.getEMail(), newCustomer.getCompany(), newCustomer.getCountry());
+				repository.save(user);
+			}
+			else {
+
+			}
+		}
 	}
 
 }

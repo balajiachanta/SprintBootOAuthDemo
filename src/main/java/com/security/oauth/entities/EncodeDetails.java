@@ -3,19 +3,29 @@ package com.security.oauth.entities;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "ENCODE_DETAILS")
 public class EncodeDetails {
 
     @Id
     @GeneratedValue
     private Long id;
-    
-    private String name;
-    private String userName;
-    
+    private String salt;
+	private String username;
     private Integer iterations;
-    public Integer getIterations() {
+	private String password;
+	
+    public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Integer getIterations() {
 		return iterations;
 	}
 
@@ -23,37 +33,33 @@ public class EncodeDetails {
 		this.iterations = iterations;
 	}
 
-	public Integer getKeyLength() {
-		return keyLength;
+
+	public String getUsername() {
+		return username;
 	}
 
-	public void setKeyLength(Integer keyLength) {
-		this.keyLength = keyLength;
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+    public String getSalt() {
+		return salt;
 	}
 
-	private Integer keyLength;
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
 
     EncodeDetails() {}
 
-    public EncodeDetails(String name) {
-        this.name = name;
+    public EncodeDetails(String salt, String username, int iterations, String password) {
+        this.salt = salt;
+        this.username = username;
+        this.iterations = iterations;
+        this.password = password;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
 
 	
 }

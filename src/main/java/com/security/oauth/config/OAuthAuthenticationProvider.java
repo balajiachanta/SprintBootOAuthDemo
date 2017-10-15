@@ -1,6 +1,8 @@
 package com.security.oauth.config;
 
 
+import java.util.Base64;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,7 +30,7 @@ public class OAuthAuthenticationProvider extends AbstractUserDetailsAuthenticati
 	private CustomPasswordEncoder passwordEncoder;
 
 	@Autowired
-	private UserRepository repository;
+	private UserRepository userRepository;
 
 	@Autowired
 	private EncodeRepository encodeRepository;
@@ -49,14 +51,15 @@ public class OAuthAuthenticationProvider extends AbstractUserDetailsAuthenticati
 		String password = authentication.getCredentials().toString();
 		User user = null;
 		try{
-			user = repository.findByUsername(username);
-
-			EncodeDetails encodeDetails = encodeRepository.findByUserName(user.getUsername());
-			boolean pwdMatches  =false;
-			System.out.println("************ " +encodeDetails.getName());
+			user = userRepository.findByUsername(username);
+			EncodeDetails encodeDetails = encodeRepository.findByUsername(username);
+			
+			boolean pwdMatches = false;
 			
 			if(null != user){
-				pwdMatches = passwordEncoder.pwdMatches(password, user.getPassword(), encodeDetails.getName(), encodeDetails.getIterations(), encodeDetails.getKeyLength());
+				byte[] salt = Base64.getDecoder().decode(encodeDetails.getSalt());
+				byte[] encodedPassword = Base64.getDecoder().decode(encodeDetails.getPassword());
+				pwdMatches = passwordEncoder.pwdMatches(password, encodedPassword, salt, encodeDetails.getIterations(), 160);
 			}
 
 
