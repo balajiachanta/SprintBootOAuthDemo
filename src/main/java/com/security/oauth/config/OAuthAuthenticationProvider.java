@@ -51,8 +51,8 @@ public class OAuthAuthenticationProvider extends AbstractUserDetailsAuthenticati
 		String password = authentication.getCredentials().toString();
 		User user = null;
 		try{
-			user = userRepository.findByUsername(username);
-			EncodeDetails encodeDetails = encodeRepository.findByUsername(username);
+			user = userRepository.findByEmail(username);
+			EncodeDetails encodeDetails = encodeRepository.findById(user.getId());
 			
 			boolean pwdMatches = false;
 			

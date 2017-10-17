@@ -1,7 +1,9 @@
 package com.security.oauth.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -9,14 +11,20 @@ import javax.persistence.Table;
 @Table(name = "ENCODE_DETAILS")
 public class EncodeDetails {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+	@Id
+//	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Column(name = "USER_ID", updatable = false, nullable = false)
+	private Long id;
     private String salt;
-	private String username;
     private Integer iterations;
 	private String password;
 	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
     public String getPassword() {
 		return password;
 	}
@@ -33,14 +41,6 @@ public class EncodeDetails {
 		this.iterations = iterations;
 	}
 
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
 	
     public String getSalt() {
 		return salt;
@@ -52,11 +52,11 @@ public class EncodeDetails {
 
     EncodeDetails() {}
 
-    public EncodeDetails(String salt, String username, int iterations, String password) {
+    public EncodeDetails(String salt, int iterations, String password, Long Id) {
         this.salt = salt;
-        this.username = username;
         this.iterations = iterations;
         this.password = password;
+        this.id = Id;
     }
 
 

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,11 +24,7 @@ import com.security.oauth.repositories.UserRepository;
 public class SecureService {
 
 	@Autowired
-	private UserRepository repository;
-
-
-	@Autowired
-	private ConsumerTokenServices tokenServices;
+	private UserRepository userRepository;
 
 	@Autowired
 	private UserPasswordConverter userPasswordConverter;
@@ -38,7 +33,7 @@ public class SecureService {
 	public ResourceResponse retrieveUserInfo(){
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		ResourceResponse res = new ResourceResponse();
-		User user =repository.findByUsername(authentication.getName());
+		User user =userRepository.findByEmail(authentication.getName());
 		res.setUsername(authentication.getName());
 		res.setFirstname(user.getFirstname());
 		res.setLastname(user.getLastname());
@@ -64,20 +59,20 @@ public class SecureService {
 	@PostMapping(value = "/registration")
 	public void createNewUser(@RequestBody Customer newCustomer) throws NoSuchAlgorithmException {
 		User user = null;
-		User userExists = repository.findByUsername(newCustomer.getEMail());
+		User userExists = userRepository.findByEmail(newCustomer.getEMail());
 		if (userExists != null) {
 
 		}
 		else {
-
-			boolean record = userPasswordConverter.passwordEncryptor(newCustomer.getPassword(), newCustomer.getEMail());
-			// record =  UserPasswordConverter.
+			user = new User(newCustomer.getFirstName(), newCustomer.getLastName(), newCustomer.getEMail(), newCustomer.getCompany(), newCustomer.getCountry());
+			userRepository.save(user);
+			user = userRepository.findByEmail(newCustomer.getEMail());
+			boolean record = userPasswordConverter.passwordEncryptor(newCustomer.getPassword(), user.getId());
 			if (record == true) {
-				user = new User(newCustomer.getFirstName(), newCustomer.getLastName(), newCustomer.getEMail(), newCustomer.getEMail(), newCustomer.getCompany(), newCustomer.getCountry());
-				repository.save(user);
+				System.out.println("user stored successfully");
 			}
 			else {
-
+				userRepository.delete(user);
 			}
 		}
 	}

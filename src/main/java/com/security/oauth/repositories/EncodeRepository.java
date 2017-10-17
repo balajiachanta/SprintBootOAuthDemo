@@ -10,6 +10,6 @@ import com.security.oauth.entities.EncodeDetails;
 @Transactional
 public interface EncodeRepository extends CrudRepository<EncodeDetails,Long> {
    
-	public EncodeDetails findByUsername(String username);
+	public EncodeDetails findById(Long Id);
 	
 }
