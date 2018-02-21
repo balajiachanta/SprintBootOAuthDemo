@@ -1,8 +1,6 @@
 delete from user;
-insert into user (email, firstname, lastname, company, username, country) values ('abcdefgh@gmail.com','apple','iphone','VML','abcdefgh@gmail.com','US');
 
 delete from ENCODE_DETAILS;
-INSERT INTO ENCODE_DETAILS(iterations, salt, username, password)VALUES(9782,'GfZ475Y7ql+KLC3H6j4Kldu/vyTYY4gPUm9McznFKWI=','abcdefgh@gmail.com','mkoskxWYxhDH38e6RsFr2faWWBw=');
 
 drop table if exists oauth_client_details;
 create table oauth_client_details (
@@ -77,3 +75,5 @@ create table ClientDetails (
   additionalInformation VARCHAR(4096),
   autoApproveScopes VARCHAR(255)
 );
+
+

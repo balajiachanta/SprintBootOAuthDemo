@@ -1,11 +1,13 @@
-package com.security.oauth.controllers;
+	package com.security.oauth.controllers;
 
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.security.oauth.ResourceResponse;
 import com.security.oauth.config.UserPasswordConverter;
 import com.security.oauth.entities.User;
@@ -26,7 +29,9 @@ public class SecureService {
 
 	@Autowired
 	private UserRepository repository;
-
+	
+	@Value("#{'${solr.facet.course.list}'.split(',')}")
+	private List<String> courseList;
 
 	@Autowired
 	private ConsumerTokenServices tokenServices;
@@ -46,6 +51,22 @@ public class SecureService {
 		res.setUserId(user.getEmail());
 		return res;
 	}
+	
+	
+	@GetMapping(value="/one")
+	public ResourceResponse getValue(){
+		ResourceResponse res = new ResourceResponse();
+		res.setFirstname("balu");
+		for(String course:courseList){
+			System.out.println("course is **** "+course);
+		}
+		
+		return res;
+	}
+	
+	
+	
+	
 
 	@Autowired
 	private TokenStore tokenStore;
