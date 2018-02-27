@@ -12,14 +12,16 @@ import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHand
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 	 private static final String RESOURCE_ID = "oauth2-resource";
+	 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.headers().frameOptions().disable().and()
                 .authorizeRequests()
-                .antMatchers("/registration/**").permitAll()
-                .antMatchers("/getUserDetails/**").authenticated()
+                .antMatchers("/").permitAll()
+                //.antMatchers("/getUserDetails/**").authenticated()
                 .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler())
-                .and().logout().logoutUrl("/oauth/logout");   
+                .and().logout().logoutUrl("/oauth/logout");
+       // http.addFilterAfter(customfilter, BasicAuthenticationFilter.class);
     }
 
    

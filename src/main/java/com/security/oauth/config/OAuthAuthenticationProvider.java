@@ -34,8 +34,7 @@ public class OAuthAuthenticationProvider extends AbstractUserDetailsAuthenticati
 
 	@Autowired
 	private EncodeRepository encodeRepository;
-
-
+	
 
 	@Override
 	public boolean supports(Class<?> authentication) {
@@ -70,6 +69,10 @@ public class OAuthAuthenticationProvider extends AbstractUserDetailsAuthenticati
 		} catch (Exception ex) {
 			throw new AuthenticationServiceException("user credentials are wrong", ex);
 		}
+		
+		
+		
+		
 
 		return new CustomUserDetails(user);
 	}

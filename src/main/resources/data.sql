@@ -19,7 +19,7 @@ create table oauth_client_details (
 
 
 INSERT INTO OAUTH_CLIENT_DETAILS(CLIENT_ID,RESOURCE_IDS,CLIENT_SECRET,SCOPE,AUTHORIZED_GRANT_TYPES,WEB_SERVER_REDIRECT_URI,AUTHORITIES,ACCESS_TOKEN_VALIDITY,REFRESH_TOKEN_VALIDITY,ADDITIONAL_INFORMATION,AUTOAPPROVE)VALUES
-('registeredclient','oauth2-resource','clientsecret','read,write,trust','client_credentials,password,refresh_token','','',600,1800,'{}','read,write,trust');
+('registeredclient','oauth2-resource','clientsecret','read,write,trust','client_credentials,password,refresh_token','','',60,1800,'{}','read,write,trust');
 drop table if exists oauth_client_token;
 create table oauth_client_token (
   authentication_id VARCHAR(255) PRIMARY KEY,

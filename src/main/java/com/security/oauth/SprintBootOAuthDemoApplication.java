@@ -15,6 +15,7 @@ import com.security.oauth.config.OAuthAuthenticationProvider;
 @SpringBootApplication
 public class SprintBootOAuthDemoApplication {
 	
+
 	
 
 	public static void main(String[] args) {
